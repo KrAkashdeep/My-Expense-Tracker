@@ -173,7 +173,7 @@ function Transactions() {
                   </label>
                   <input
                     type="number"
-                    step="0.01"
+                    step="1"
                     required
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     value={newTransaction.amount}
@@ -269,7 +269,7 @@ function Transactions() {
                         : "text-green-600"
                     }`}
                   >
-                    ${Math.abs(transaction?.amount || 0).toFixed(2)}
+                    ₹{Math.abs(transaction?.amount || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4">
                     <span

@@ -1,17 +1,80 @@
 import { Bar } from "react-chartjs-2";
+import { useEffect, useState } from "react";
+import { getTransactions } from "../api/transactionAPI";
 
 function Dashboard() {
-  // Sample data for the chart
-  const recentTransactionsData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    datasets: [
-      {
-        label: "Expenses",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: "rgba(239, 68, 68, 0.5)",
-      },
-    ],
-  };
+  const [transactions, setTransactions] = useState([]);
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+
+  useEffect(() => {
+    const loadTransactions = async () => {
+      try {
+        const response = await getTransactions();
+        const sortedTransactions = response.transactions.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setTransactions(sortedTransactions);
+
+        // Calculate totals
+        const { income, expense } = sortedTransactions.reduce(
+          (acc, transaction) => {
+            if (transaction.type === "Income") {
+              acc.income += transaction.amount;
+            } else {
+              acc.expense += transaction.amount;
+            }
+            return acc;
+          },
+          { income: 0, expense: 0 }
+        );
+
+        setTotalIncome(income);
+        setTotalExpense(expense);
+
+        // Process chart data for last 7 days
+        const last7Days = Array.from({ length: 7 }, (_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() - i);
+          return date;
+        }).reverse();
+
+        const expensesByDay = sortedTransactions
+          .filter((t) => t.type === "Expense")
+          .reduce((acc, transaction) => {
+            const date = new Date(transaction.date).toLocaleDateString();
+            acc[date] = (acc[date] || 0) - transaction.amount;
+            return acc;
+          }, {});
+
+        const chartLabels = last7Days.map((date) =>
+          date.toLocaleDateString("en-US", { weekday: "short" })
+        );
+
+        const chartValues = last7Days.map((date) => {
+          const dateKey = date.toLocaleDateString();
+          return expensesByDay[dateKey] || 0;
+        });
+
+        setChartData({
+          labels: chartLabels,
+          datasets: [
+            {
+              label: "Expenses",
+              data: chartValues,
+              backgroundColor: "rgba(239, 68, 68, 0.5)",
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Failed to load transactions:", error);
+      }
+    };
+    loadTransactions();
+  }, []);
+
+  const recentTransactions = transactions.slice(0, 4);
 
   return (
     <div className="container mx-auto px-4">
@@ -21,14 +84,18 @@ function Dashboard() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium text-gray-900">Total Balance</h3>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mt-2">$5,000.00</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">
+            ₹{(totalIncome + totalExpense).toFixed(2)}
+          </p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium text-gray-900">Total Income</h3>
           </div>
-          <p className="text-3xl font-bold text-green-600 mt-2">$6,000.00</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">
+            ₹{totalIncome.toFixed(2)}
+          </p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
@@ -37,7 +104,9 @@ function Dashboard() {
               Total Expenses
             </h3>
           </div>
-          <p className="text-3xl font-bold text-red-600 mt-2">$1000.00</p>
+          <p className="text-3xl font-bold text-red-600 mt-2">
+            ₹{totalExpense.toFixed(2)}
+          </p>
         </div>
       </div>
 
@@ -46,35 +115,39 @@ function Dashboard() {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
           <div className="space-y-4">
-            {/* Transaction items */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center">
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-900">
-                    Grocery Shopping
-                  </p>
-                  <p className="text-sm text-gray-500">Feb 20, 2024</p>
+            {recentTransactions.map((transaction) => (
+              <div
+                key={transaction._id}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              >
+                <div className="flex items-center">
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-900">
+                      {transaction.description}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(transaction.date).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
+                <span
+                  className={`${
+                    transaction.type === "Income"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  } font-medium`}
+                >
+                  {transaction.type === "Income" ? "+" : ""}₹
+                  {transaction.amount.toFixed(2)}
+                </span>
               </div>
-              <span className="text-red-600 font-medium">-$150.00</span>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center">
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-900">
-                    Salary Deposit
-                  </p>
-                  <p className="text-sm text-gray-500">Feb 19, 2024</p>
-                </div>
-              </div>
-              <span className="text-green-600 font-medium">+$2,500.00</span>
-            </div>
+            ))}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Weekly Expenses</h2>
-          <Bar data={recentTransactionsData} />
+          <Bar data={chartData} />
         </div>
       </div>
 
