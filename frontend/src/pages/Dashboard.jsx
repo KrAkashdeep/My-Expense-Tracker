@@ -1,4 +1,3 @@
-import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 import { Bar } from "react-chartjs-2";
 
 function Dashboard() {
@@ -21,23 +20,15 @@ function Dashboard() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium text-gray-900">Total Balance</h3>
-            {/* <span className="text-green-600">
-              <ArrowUpIcon className="h-5 w-5 inline" />
-              +2.5%
-            </span> */}
           </div>
-          <p className="text-3xl font-bold text-gray-900 mt-2">$5,750.00</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">$5,000.00</p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium text-gray-900">Total Income</h3>
-            {/* <span className="text-green-600">
-              <ArrowUpIcon className="h-5 w-5 inline" />
-              +4.2%
-            </span> */}
           </div>
-          <p className="text-3xl font-bold text-green-600 mt-2">$2,890.00</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">$6,000.00</p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
@@ -45,12 +36,8 @@ function Dashboard() {
             <h3 className="text-lg font-medium text-gray-900">
               Total Expenses
             </h3>
-            {/* <span className="text-red-600">
-              <ArrowDownIcon className="h-5 w-5 inline" />
-              -1.8%
-            </span> */}
           </div>
-          <p className="text-3xl font-bold text-red-600 mt-2">$1,750.00</p>
+          <p className="text-3xl font-bold text-red-600 mt-2">$1000.00</p>
         </div>
       </div>
 
@@ -101,7 +88,7 @@ function Dashboard() {
                 Food & Dining budget is at 80%
               </p>
               <p className="text-sm text-red-600">
-                You've spent $400 of your $500 budget
+                {` You've spent $400 of your $500 budget`}
               </p>
             </div>
             <div className="p-4 bg-yellow-50 rounded-lg">

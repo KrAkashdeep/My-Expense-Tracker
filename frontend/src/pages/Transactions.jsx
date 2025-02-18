@@ -1,56 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createTransaction, getTransactions } from "../api/transactionAPI";
 
 function Transactions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [transactions, setTransactions] = useState([
-    // Sample initial transaction
-    {
-      id: 1,
-      date: "2024-02-20",
-      description: "Grocery Shopping",
-      category: "Food & Dining",
-      amount: -150.0,
-      type: "Expense",
-    },
-  ]);
+  const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     date: "",
     description: "",
-    category: "Others",
+    category: "Food & Dining",
     amount: "",
     type: "Expense",
   });
 
-  const handleAddTransaction = (e) => {
-    e.preventDefault();
-    if (
-      !newTransaction.date ||
-      !newTransaction.description ||
-      !newTransaction.amount
-    ) {
-      alert("Please fill in all required fields");
-      return;
-    }
+  useEffect(() => {
+    const loadTransactions = async () => {
+      try {
+        const response = await getTransactions();
+        setTransactions(response.transactions);
+      } catch (error) {
+        console.error("Failed to load transactions:", error);
+      }
+    };
+    loadTransactions();
+  }, []);
 
-    setTransactions([
-      ...transactions,
-      {
+  const handleAddTransaction = async (e) => {
+    e.preventDefault();
+    try {
+      const transactionData = {
         ...newTransaction,
-        id: Date.now(),
         amount:
           parseFloat(newTransaction.amount) *
           (newTransaction.type === "Expense" ? -1 : 1),
-      },
-    ]);
+      };
 
-    setNewTransaction({
-      date: "",
-      description: "",
-      category: "Food & Dining",
-      amount: "",
-      type: "Expense",
-    });
-    setIsModalOpen(false);
+      const response = await createTransaction(transactionData);
+      // console.log("Created transaction response:", response);
+      setTransactions([...transactions, response]);
+
+      setNewTransaction({
+        date: "",
+        description: "",
+        category: "Food & Dining",
+        amount: "",
+        type: "Expense",
+      });
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to create transaction:", error);
+      alert("Failed to save transaction. Please try again.");
+    }
   };
 
   return (
@@ -248,33 +247,43 @@ function Transactions() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {transactions.map((transaction) => (
-              <tr key={transaction.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {transaction.date}
-                </td>
-                <td className="px-6 py-4">{transaction.description}</td>
-                <td className="px-6 py-4">{transaction.category}</td>
-                <td
-                  className={`px-6 py-4 ${
-                    transaction.amount < 0 ? "text-red-600" : "text-green-600"
-                  }`}
-                >
-                  ${Math.abs(transaction.amount).toFixed(2)}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      transaction.type === "Expense"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-green-100 text-green-800"
+            {transactions
+              ?.filter((t) => t)
+              ?.map((transaction) => (
+                <tr key={transaction._id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction?.date
+                      ? new Date(transaction.date).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {transaction?.description || "No description"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {transaction?.category || "Uncategorized"}
+                  </td>
+                  <td
+                    className={`px-6 py-4 ${
+                      transaction?.amount < 0
+                        ? "text-red-600"
+                        : "text-green-600"
                     }`}
                   >
-                    {transaction.type}
-                  </span>
-                </td>
-              </tr>
-            ))}
+                    ${Math.abs(transaction?.amount || 0).toFixed(2)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        transaction?.type === "Expense"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {transaction?.type || "Unknown"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
