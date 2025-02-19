@@ -1,22 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getBudgets, createBudget } from "../api/budgetAPI";
+import { getTransactions } from "../api/transactionAPI";
 import BudgetModal from "../components/BudgetModal";
 
 function Budgets() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [budgets, setBudgets] = useState([
-    { category: "Food & Dining", spent: 400, total: 500 },
-    { category: "Transportation", spent: 150, total: 300 },
-  ]);
+  const [budgets, setBudgets] = useState([]);
 
-  const handleNewBudget = (budgetData) => {
-    setBudgets([
-      ...budgets,
-      {
-        category: budgetData.category,
-        spent: 0,
-        total: budgetData.amount,
-      },
-    ]);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [budgetsResponse, transactionsResponse] = await Promise.all([
+          getBudgets(),
+          getTransactions(),
+        ]);
+
+        const categoryExpenses = transactionsResponse.transactions
+          .filter((t) => t.type === "Expense")
+          .reduce((acc, transaction) => {
+            acc[transaction.category] =
+              (acc[transaction.category] || 0) + Math.abs(transaction.amount);
+            return acc;
+          }, {});
+
+        setBudgets(
+          budgetsResponse.budget.map((b) => ({
+            category: b.category,
+            spent: categoryExpenses[b.category] || 0,
+            total: b.amount,
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+    };
+    loadData();
+  }, []);
+
+  const handleNewBudget = async (budgetData) => {
+    try {
+      const savedBudget = await createBudget(budgetData);
+      setBudgets((prev) => [
+        ...prev,
+        {
+          category: savedBudget.category,
+          spent: 0,
+          total: savedBudget.amount,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error creating budget:", error);
+    }
   };
 
   const calculateTotals = () => {
@@ -50,14 +84,14 @@ function Budgets() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900">Total Budget</h3>
           <p className="text-3xl font-bold text-blue-600">
-            ${totals.total.toFixed(2)}
+            ₹{totals.total.toFixed(2)}
           </p>
           <p className="text-sm text-gray-500">Monthly allocation</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900">Spent</h3>
           <p className="text-3xl font-bold text-red-600">
-            ${totals.spent.toFixed(2)}
+            ₹{totals.spent.toFixed(2)}
           </p>
           <p className="text-sm text-gray-500">
             {((totals.spent / totals.total) * 100).toFixed(0)}% of total budget
@@ -66,7 +100,7 @@ function Budgets() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900">Remaining</h3>
           <p className="text-3xl font-bold text-green-600">
-            ${remaining.toFixed(2)}
+            ₹{remaining.toFixed(2)}
           </p>
           <p className="text-sm text-gray-500">
             {((remaining / totals.total) * 100).toFixed(0)}% of total budget
@@ -88,7 +122,7 @@ function Budgets() {
                   <div>
                     <h3 className="text-lg font-medium">{budget.category}</h3>
                     <p className="text-sm text-gray-500">
-                      ${budget.spent} of ${budget.total}
+                      ₹{budget.spent} of ₹{budget.total}
                     </p>
                   </div>
                   <span

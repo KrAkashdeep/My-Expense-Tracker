@@ -73,6 +73,7 @@ function BudgetModal({ isOpen, onClose, onSave }) {
                         Bills & Utilities
                       </option>
                       <option value="Entertainment">Entertainment</option>
+                      <option value="Others">Others</option>
                     </select>
                   </div>
 
@@ -82,14 +83,14 @@ function BudgetModal({ isOpen, onClose, onSave }) {
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-sm">$</span>
+                        <span className="text-gray-500 sm:text-sm">₹</span>
                       </div>
                       <input
                         type="number"
                         name="amount"
                         required
                         min="0"
-                        step="0.01"
+                        step="1"
                         className="pl-7 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         placeholder="0.00"
                       />

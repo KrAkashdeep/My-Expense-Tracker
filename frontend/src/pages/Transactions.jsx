@@ -11,6 +11,11 @@ function Transactions() {
     amount: "",
     type: "Expense",
   });
+  const [filters, setFilters] = useState({
+    dateRange: "7days",
+    category: "All Categories",
+    type: "All",
+  });
 
   useEffect(() => {
     const loadTransactions = async () => {
@@ -52,6 +57,37 @@ function Transactions() {
     }
   };
 
+  const filteredTransactions = transactions
+    ?.filter((t) => t)
+    ?.filter((transaction) => {
+      const now = new Date();
+      const transactionDate = new Date(transaction.date);
+
+      // Date filter
+      switch (filters.dateRange) {
+        case "7days":
+          { const sevenDaysAgo = new Date(now.setDate(now.getDate() - 7));
+          return transactionDate >= sevenDaysAgo; }
+        case "30days":
+          { const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+          return transactionDate >= thirtyDaysAgo; }
+        case "3months":
+          { const threeMonthsAgo = new Date(now.setMonth(now.getMonth() - 3));
+          return transactionDate >= threeMonthsAgo; }
+        default:
+          return true;
+      }
+    })
+    ?.filter(
+      (transaction) =>
+        filters.category === "All Categories" ||
+        transaction.category === filters.category
+    )
+    ?.filter(
+      (transaction) =>
+        filters.type === "All" || transaction.type === filters.type
+    );
+
   return (
     <div className="container mx-auto px-4">
       {/* Header Section */}
@@ -67,23 +103,35 @@ function Transactions() {
 
       {/* Filters Section */}
       <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Date Range
             </label>
-            <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-              <option>Last 7 days</option>
-              <option>Last 30 days</option>
-              <option>Last 3 months</option>
-              <option>Custom</option>
+            <select
+              value={filters.dateRange}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, dateRange: e.target.value }))
+              }
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="7days">Last 7 days</option>
+              <option value="30days">Last 30 days</option>
+              <option value="3months">Last 3 months</option>
+              <option value="all">All Time</option>
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Category
             </label>
-            <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <select
+              value={filters.category}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, category: e.target.value }))
+              }
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
               <option>All Categories</option>
               <option>Food & Dining</option>
               <option>Shopping</option>
@@ -96,11 +144,31 @@ function Transactions() {
             <label className="block text-sm font-medium text-gray-700">
               Type
             </label>
-            <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-              <option>All Types</option>
-              <option>Income</option>
-              <option>Expense</option>
+            <select
+              value={filters.type}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, type: e.target.value }))
+              }
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="All">All Types</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
             </select>
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={() =>
+                setFilters({
+                  dateRange: "7days",
+                  category: "All Categories",
+                  type: "All",
+                })
+              }
+              className="w-full bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+            >
+              Clear Filters
+            </button>
           </div>
         </div>
       </div>
@@ -247,43 +315,39 @@ function Transactions() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {transactions
-              ?.filter((t) => t)
-              ?.map((transaction) => (
-                <tr key={transaction._id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {transaction?.date
-                      ? new Date(transaction.date).toLocaleDateString()
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {transaction?.description || "No description"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {transaction?.category || "Uncategorized"}
-                  </td>
-                  <td
-                    className={`px-6 py-4 ${
-                      transaction?.amount < 0
-                        ? "text-red-600"
-                        : "text-green-600"
+            {filteredTransactions?.map((transaction) => (
+              <tr key={transaction._id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {transaction?.date
+                    ? new Date(transaction.date).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {transaction?.description || "No description"}
+                </td>
+                <td className="px-6 py-4">
+                  {transaction?.category || "Uncategorized"}
+                </td>
+                <td
+                  className={`px-6 py-4 ${
+                    transaction?.amount < 0 ? "text-red-600" : "text-green-600"
+                  }`}
+                >
+                  ₹{Math.abs(transaction?.amount || 0).toFixed(2)}
+                </td>
+                <td className="px-6 py-4">
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      transaction?.type === "Expense"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-green-100 text-green-800"
                     }`}
                   >
-                    ₹{Math.abs(transaction?.amount || 0).toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        transaction?.type === "Expense"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-green-100 text-green-800"
-                      }`}
-                    >
-                      {transaction?.type || "Unknown"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                    {transaction?.type || "Unknown"}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

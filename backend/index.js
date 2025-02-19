@@ -10,6 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/transactions", require("./Routers/TransactionRouter"));
+app.use("/budgets", require("./Routers/BudgetRouter"));
 app.get("/", (req, res) => {
   res.send("hello world");
 });
