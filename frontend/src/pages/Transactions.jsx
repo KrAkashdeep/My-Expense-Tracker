@@ -65,15 +65,18 @@ function Transactions() {
 
       // Date filter
       switch (filters.dateRange) {
-        case "7days":
-          { const sevenDaysAgo = new Date(now.setDate(now.getDate() - 7));
-          return transactionDate >= sevenDaysAgo; }
-        case "30days":
-          { const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
-          return transactionDate >= thirtyDaysAgo; }
-        case "3months":
-          { const threeMonthsAgo = new Date(now.setMonth(now.getMonth() - 3));
-          return transactionDate >= threeMonthsAgo; }
+        case "7days": {
+          const sevenDaysAgo = new Date(now.setDate(now.getDate() - 7));
+          return transactionDate >= sevenDaysAgo;
+        }
+        case "30days": {
+          const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+          return transactionDate >= thirtyDaysAgo;
+        }
+        case "3months": {
+          const threeMonthsAgo = new Date(now.setMonth(now.getMonth() - 3));
+          return transactionDate >= threeMonthsAgo;
+        }
         default:
           return true;
       }
@@ -293,8 +296,8 @@ function Transactions() {
       )}
 
       {/* Transactions Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

@@ -1,8 +1,8 @@
 function Login() {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left side - Brand & Quote */}
-      <div className="hidden lg:flex w-1/2 bg-blue-600 p-12 flex-col justify-between">
+      <div className="lg:w-1/2 bg-blue-600 p-8 flex flex-col justify-between">
         <div className="text-white">
           <h1 className="text-4xl font-bold">Expense Tracker</h1>
           <p className="mt-4 text-xl">Take control of your finances</p>
@@ -13,8 +13,8 @@ function Login() {
       </div>
 
       {/* Right side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="max-w-md w-full">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
           <h2 className="text-3xl font-bold text-center mb-8">Welcome Back</h2>
           <form className="space-y-6">
             <div>

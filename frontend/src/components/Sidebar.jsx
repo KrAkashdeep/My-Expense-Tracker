@@ -6,7 +6,7 @@ import {
   WalletIcon,
 } from "@heroicons/react/24/outline";
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
 
   const navigation = [
@@ -17,10 +17,32 @@ function Sidebar() {
   ];
 
   return (
-    <div className="fixed inset-y-0 left-0 w-64 bg-gray-800">
+    <div
+      className={`fixed inset-y-0 left-0 w-64 bg-gray-800 transform transition-transform duration-300 ease-in-out z-50 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      } md:translate-x-0`}
+    >
       <div className="flex flex-col h-full">
-        <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900">
+        <div className="flex items-center justify-between h-16 px-4 bg-gray-900">
           <h1 className="text-xl font-bold text-white">Expense Tracker</h1>
+          <button
+            onClick={onClose}
+            className="md:hidden text-gray-400 hover:text-white"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
         <div className="flex-1 flex flex-col overflow-y-auto">
           <nav className="flex-1 px-2 py-4 space-y-1">
