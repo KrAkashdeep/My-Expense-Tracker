@@ -4,7 +4,6 @@ const api_url = "http://localhost:3000";
 
 export const createTransaction = async (transaction) => {
   try {
-  
     const response = await axios.post(`${api_url}/transactions`, transaction);
     return response.data;
   } catch (error) {
@@ -21,6 +20,16 @@ export const getTransactions = async () => {
   } catch (error) {
     throw new Error(
       error.response.data.message || "Error fetching transactions"
+    );
+  }
+};
+export const deleteTransaction = async (id) => {
+  try {
+    const response = await axios.delete(`${api_url}/transactions/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message || "Error deleting transactions"
     );
   }
 };

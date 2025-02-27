@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getBudgets, createBudget } from "../api/budgetAPI";
+import { getBudgets, createBudget, deleteBudget } from "../api/budgetAPI";
 import { getTransactions } from "../api/transactionAPI";
 import BudgetModal from "../components/BudgetModal";
 
@@ -62,6 +62,19 @@ function Budgets() {
       { total: 0, spent: 0 }
     );
   };
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteBudget(id);
+
+      setBudgets(budgets.filter((f) => f._id !== id));
+
+      if (response.success) {
+        getBudgets();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const totals = calculateTotals();
   const remaining = totals.total - totals.spent;
@@ -118,6 +131,12 @@ function Budgets() {
 
             return (
               <div key={index} className="border-b pb-4">
+                <button
+                  className="text-red-600 cursor-pointer border-1 px-4 rounded-2xl"
+                  onClick={() => handleDelete(budget._id)}
+                >
+                  delete
+                </button>
                 <div className="flex justify-between items-center mb-2">
                   <div>
                     <h3 className="text-lg font-medium">{budget.category}</h3>

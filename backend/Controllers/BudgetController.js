@@ -19,10 +19,22 @@ const getBudget = async (req, res) => {
     const budget = await BudgetModel.find();
     res
       .status(200)
-      .json({ message: "Budget fetched successfully", sucess: true, budget });
+      .json({ message: "Budget fetched successfully", success: true, budget });
   } catch (error) {
     res.status(500).json({ message: "Error fetching budget" });
   }
 };
 
-module.exports = { addBudget, getBudget };
+const deleteBudget = async (req, res) => {
+  try {
+    const { id } = req.params.id;
+    await BudgetModel.findByIdAndDelete(id);
+    res
+      .status(200)
+      .json({ message: "Budget deleted successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting budget" });
+  }
+};
+
+module.exports = { addBudget, getBudget, deleteBudget };
