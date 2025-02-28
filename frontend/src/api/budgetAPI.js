@@ -25,6 +25,6 @@ export const deleteBudget = async (id) => {
     const response = await axios.delete(`${api_url}/budgets/${id}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message || "Error deleting budget");
+    throw new Error(error.response?.data?.message || "Error deleting budget");
   }
 };

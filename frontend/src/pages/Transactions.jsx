@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { createTransaction, getTransactions } from "../api/transactionAPI";
+import {
+  createTransaction,
+  deleteTransaction,
+  getTransactions,
+} from "../api/transactionAPI";
 
 function Transactions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,6 +94,15 @@ function Transactions() {
       (transaction) =>
         filters.type === "All" || transaction.type === filters.type
     );
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteTransaction(id);
+      setTransactions(transactions.filter((tr) => tr._id !== id));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4">
@@ -260,6 +273,7 @@ function Transactions() {
                   <label className="block text-sm font-medium text-gray-700">
                     Type
                   </label>
+
                   <select
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     value={newTransaction.type}
@@ -315,6 +329,9 @@ function Transactions() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Type
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Delete
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -348,6 +365,14 @@ function Transactions() {
                   >
                     {transaction?.type || "Unknown"}
                   </span>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(transaction._id)}
+                    className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-300 cursor-pointer"
+                  >
+                    delete
+                  </button>
                 </td>
               </tr>
             ))}

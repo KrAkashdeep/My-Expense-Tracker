@@ -27,7 +27,7 @@ const getBudget = async (req, res) => {
 
 const deleteBudget = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
     await BudgetModel.findByIdAndDelete(id);
     res
       .status(200)

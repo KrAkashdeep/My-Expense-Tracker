@@ -35,7 +35,7 @@ const getAllTransactions = async (req, res) => {
 
 const deleteTransaction = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
     await TransactionModel.findByIdAndDelete(id);
     res
       .status(200)

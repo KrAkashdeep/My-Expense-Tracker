@@ -25,6 +25,7 @@ function Budgets() {
 
         setBudgets(
           budgetsResponse.budget.map((b) => ({
+            _id: b._id, // Add this line
             category: b.category,
             spent: categoryExpenses[b.category] || 0,
             total: b.amount,
@@ -64,15 +65,10 @@ function Budgets() {
   };
   const handleDelete = async (id) => {
     try {
-      const response = await deleteBudget(id);
-
-      setBudgets(budgets.filter((f) => f._id !== id));
-
-      if (response.success) {
-        getBudgets();
-      }
+      await deleteBudget(id);
+      setBudgets(budgets.filter((budget) => budget._id !== id));
     } catch (error) {
-      console.log(error);
+      console.error("Delete failed:", error);
     }
   };
 
