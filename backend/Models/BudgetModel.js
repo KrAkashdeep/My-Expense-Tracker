@@ -4,11 +4,11 @@ const schema = mongoose.Schema;
 const budgetSchema = new schema({
   category: {
     type: String,
-    required: true,
+    required: True,
   },
   amount: {
     type: Number,
-    required: true,
+    required: True,
   },
 });
 
