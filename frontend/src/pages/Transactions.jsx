@@ -16,7 +16,7 @@ function Transactions() {
     type: "Expense",
   });
   const [filters, setFilters] = useState({
-    dateRange: "7days",
+    dateRange: "all",
     category: "All Categories",
     type: "All",
   });
