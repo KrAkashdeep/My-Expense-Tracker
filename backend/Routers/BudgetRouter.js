@@ -3,11 +3,12 @@ const {
   getBudget,
   deleteBudget,
 } = require("../Controllers/BudgetController");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = require("express").Router();
 
-router.get("/", getBudget);
-router.post("/", addBudget);
-router.delete("/:id", deleteBudget);
+router.get("/", protect, getBudget);
+router.post("/", protect, addBudget);
+router.delete("/:id", protect, deleteBudget);
 
 module.exports = router;

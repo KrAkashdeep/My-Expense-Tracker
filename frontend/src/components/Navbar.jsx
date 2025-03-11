@@ -1,4 +1,16 @@
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
+
 function Navbar({ onMenuClick }) {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <div className="h-16 bg-white shadow">
       <div className="h-full px-4 flex justify-between md:justify-end items-center">
@@ -21,7 +33,21 @@ function Navbar({ onMenuClick }) {
           </svg>
         </button>
         <div className="ml-4 flex items-center md:ml-6">
-          {/* Profile dropdown */}
+          {/* User info and logout */}
+          {user && (
+            <div className="flex items-center space-x-4">
+              <div className="text-sm">
+                <span className="text-gray-700">Welcome, </span>
+                <span className="font-medium text-gray-900">{user.name}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

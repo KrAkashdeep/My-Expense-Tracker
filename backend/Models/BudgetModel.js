@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const budgetSchema = new schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   category: {
     type: String,
     required: true,

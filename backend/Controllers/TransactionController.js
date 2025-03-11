@@ -4,6 +4,7 @@ const addTransaction = async (req, res) => {
   try {
     const { description, amount, date, category, type } = req.body;
     const transaction = new TransactionModel({
+      user: req.user._id,
       description,
       amount,
       date,
@@ -20,7 +21,7 @@ const addTransaction = async (req, res) => {
 
 const getAllTransactions = async (req, res) => {
   try {
-    const transactions = await TransactionModel.find();
+    const transactions = await TransactionModel.find({ user: req.user._id });
     res.status(200).json({
       message: "All transactions fetched successfully",
       sucess: true,
@@ -36,6 +37,19 @@ const getAllTransactions = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Check if transaction belongs to user
+    const transaction = await TransactionModel.findById(id);
+
+    if (!transaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    // Make sure user owns transaction
+    if (transaction.user.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
     await TransactionModel.findByIdAndDelete(id);
     res
       .status(200)
