@@ -30,7 +30,7 @@ const Login = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3000/api/users/login",
+        "https://expense-backend-vert.vercel.app/api/users/login",
         {
           email,
           password,

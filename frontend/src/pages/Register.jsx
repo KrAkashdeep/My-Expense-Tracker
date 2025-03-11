@@ -37,7 +37,7 @@ const Register = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3000/api/users/register",
+        "https://expense-backend-vert.vercel.app/api/users/register",
         {
           name,
           email,
