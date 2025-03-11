@@ -38,7 +38,7 @@ function App() {
           />
           <Route
             path="/register"
-            element={!user ? <Register /> : <Navigate to="/register" />}
+            element={!user ? <Register /> : <Navigate to="/login" />}
           />
 
           {/* Protected Routes */}
