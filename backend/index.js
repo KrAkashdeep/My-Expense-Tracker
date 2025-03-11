@@ -9,7 +9,7 @@ require("./config/db.js");
 app.use(cors());
 app.use(bodyParser.json());
 app.use({
-  origin: "https://expense-tracker-frontend-beta-steel.vercel.app/",
+  origin: "https://expense-tracker-frontend-beta-steel.vercel.app",
   credentials: true,
 });
 
