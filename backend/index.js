@@ -6,12 +6,18 @@ const cors = require("cors");
 require("dotenv").config();
 require("./config/db.js");
 
-app.use(cors());
+// Configure CORS
+app.use(
+  cors({
+    origin: [
+      "https://expense-tracker-frontend-beta-steel.vercel.app",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(bodyParser.json());
-app.use({
-  origin: "https://expense-tracker-frontend-beta-steel.vercel.app",
-  credentials: true,
-});
 
 // Routes
 app.use("/api/users", require("./Routers/UserRouter"));

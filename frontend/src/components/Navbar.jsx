@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import AuthContext from "../context/AuthContext";
 
 function Navbar({ onMenuClick }) {
@@ -53,5 +54,9 @@ function Navbar({ onMenuClick }) {
     </div>
   );
 }
+
+Navbar.propTypes = {
+  onMenuClick: PropTypes.func.isRequired,
+};
 
 export default Navbar;
