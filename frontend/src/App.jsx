@@ -34,11 +34,11 @@ function App() {
           {/* Public Routes */}
           <Route
             path="/login"
-            element={!user ? <Login /> : <Navigate to="/" />}
+            element={!user ? <Login /> : <Navigate to="/login" />}
           />
           <Route
             path="/register"
-            element={!user ? <Register /> : <Navigate to="/" />}
+            element={!user ? <Register /> : <Navigate to="/register" />}
           />
 
           {/* Protected Routes */}
