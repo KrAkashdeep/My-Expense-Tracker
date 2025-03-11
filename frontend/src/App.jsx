@@ -44,14 +44,15 @@ function App() {
           {/* Protected Routes */}
           <Route
             path="/"
-            element={user ? <Layout /> : <Navigate to="/login" />}
+            element={user ? <Layout /> : <Navigate to="/" />}
+            login
           >
             <Route index element={<Dashboard />} />
-            <Route path="transactions" element={<Transactions />} />
-            <Route path="budgets" element={<Budgets />} />
-            <Route path="reports" element={<Reports />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/budgets" element={<Budgets />} />
+            <Route path="/reports" element={<Reports />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
       <ToastContainer />
