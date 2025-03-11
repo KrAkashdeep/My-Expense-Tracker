@@ -8,6 +8,10 @@ require("./config/db.js");
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use({
+  origin: "https://expense-tracker-frontend-beta-steel.vercel.app/",
+  credentials: true,
+});
 
 // Routes
 app.use("/api/users", require("./Routers/UserRouter"));
