@@ -9,10 +9,8 @@ require("./config/db.js");
 // Configure CORS
 app.use(
   cors({
-    origin: [
-      "https://expense-tracker-frontend-beta-steel.vercel.app",
-      "http://localhost:5173",
-    ],
+    origin: "https://expense-tracker-frontend-beta-steel.vercel.app",
+
     credentials: true,
   })
 );
