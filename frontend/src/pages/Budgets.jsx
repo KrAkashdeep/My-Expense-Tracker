@@ -95,7 +95,7 @@ function Budgets() {
           <p className="text-3xl font-bold text-blue-600">
             ₹{totals.total.toFixed(2)}
           </p>
-          <p className="text-sm text-gray-500">Monthly allocation</p>
+          <p className="text-sm text-gray-500">Budget allocation</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900">Spent</h3>
@@ -104,6 +104,7 @@ function Budgets() {
           </p>
           <p className="text-sm text-gray-500">
             {((totals.spent / totals.total) * 100).toFixed(0)}% of total budget
+            Spent
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
@@ -113,6 +114,7 @@ function Budgets() {
           </p>
           <p className="text-sm text-gray-500">
             {((remaining / totals.total) * 100).toFixed(0)}% of total budget
+            Remaining
           </p>
         </div>
       </div>
