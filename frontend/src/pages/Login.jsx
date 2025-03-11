@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import AuthContext from "../context/AuthContext";
+import api from "../utils/api";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -29,13 +29,10 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(
-        "https://expense-backend-vert.vercel.app/api/users/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await api.post("/api/users/login", {
+        email,
+        password,
+      });
 
       // Use the login function from context
       login(response.data);
@@ -43,6 +40,7 @@ const Login = () => {
       toast.success("Login successful");
       navigate("/");
     } catch (error) {
+      console.error("Login error:", error);
       toast.error(error.response?.data?.message || "Login failed");
       setLoading(false);
     }
@@ -107,7 +105,7 @@ const Login = () => {
 
         <div className="text-center mt-4">
           <p>
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link to="/register" className="text-blue-500 hover:text-blue-700">
               Register
             </Link>
