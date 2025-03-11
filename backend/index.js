@@ -9,7 +9,7 @@ require("./config/db.js");
 // Configure CORS - Allow all origins for mobile compatibility
 app.use(
   cors({
-    origin: "*", // Allow all origins
+    origin: "https://expense-tracker-frontend-beta-steel.vercel.app", // Allow all origins
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true,

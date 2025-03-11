@@ -7,19 +7,18 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
+    "Accept": "application/json"
   },
+  timeout: 10000 // 10 seconds timeout
 });
 
 // Add a request interceptor to add the auth token to every request
 api.interceptors.request.use(
   (config) => {
     try {
-      // Get the token from localStorage
       const userString = localStorage.getItem("user");
       if (userString) {
         const user = JSON.parse(userString);
-        // If token exists, add it to the headers
         if (user && user.token) {
           config.headers.Authorization = `Bearer ${user.token}`;
         }
@@ -27,10 +26,21 @@ api.interceptors.request.use(
     } catch (error) {
       console.error("Error parsing user from localStorage:", error);
     }
-
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor to handle errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    }
     return Promise.reject(error);
   }
 );
