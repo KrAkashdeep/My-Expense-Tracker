@@ -28,33 +28,28 @@ function App() {
   }
 
   return (
-    <>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route
-            path="/login"
-            element={!user ? <Login /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/register"
-            element={!user ? <Register /> : <Navigate to="/login" />}
-          />
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/register"
+          element={!user ? <Register /> : <Navigate to="/" />}
+        />
 
-          {/* Protected Routes */}
-          <Route
-            path="/"
-            element={user ? <Layout /> : <Navigate to="/login" />}
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="transactions" element={<Transactions />} />
-            <Route path="budgets" element={<Budgets />} />
-            <Route path="reports" element={<Reports />} />
-          </Route>
-        </Routes>
-      </Router>
+        {/* Protected Routes */}
+        <Route path="/" element={user ? <Layout /> : <Navigate to="/login" />}>
+          <Route index element={<Dashboard />} />
+          <Route path="transactions" element={<Transactions />} />
+          <Route path="budgets" element={<Budgets />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
+      </Routes>
       <ToastContainer />
-    </>
+    </Router>
   );
 }
 
