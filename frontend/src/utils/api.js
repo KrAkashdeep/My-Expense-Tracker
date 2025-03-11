@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "https://expense-backend-vert.vercel.app";
 
+
 // Create an axios instance
 const api = axios.create({
   baseURL: API_URL,
