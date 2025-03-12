@@ -29,7 +29,7 @@ function App() {
 
   return (
     <>
-      <Router>
+      <Router onrefresh="window.location.reload()">
         <Routes>
           {/* Public Routes */}
           <Route
