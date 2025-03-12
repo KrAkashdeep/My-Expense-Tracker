@@ -52,7 +52,7 @@ function App() {
             <Route path="/budgets" element={<Budgets />} />
             <Route path="/reports" element={<Reports />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
       <ToastContainer />
