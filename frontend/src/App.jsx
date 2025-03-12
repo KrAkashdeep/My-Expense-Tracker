@@ -29,16 +29,16 @@ function App() {
 
   return (
     <>
-      <Router onrefresh="window.location.reload()">
+      <Router>
         <Routes>
           {/* Public Routes */}
           <Route
             path="/login"
-            element={!user ? <Login /> : <Navigate to="/login" />}
+            element={!user ? <Login /> : <Navigate to="/register" />}
           />
           <Route
             path="/register"
-            element={!user ? <Register /> : <Navigate to="/register" />}
+            element={!user ? <Register /> : <Navigate to="/login" />}
           />
 
           {/* Protected Routes */}
