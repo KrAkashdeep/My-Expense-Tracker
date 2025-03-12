@@ -1,19 +1,18 @@
 import axios from "axios";
 
-const API_URL = "https://expense-backend-vert.vercel.app";
-
+// const API_URL = "https://expense-backend-vert.vercel.app";
+const API_URL = "http://localhost:3000";
 
 // Create an axios instance
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json"
+    Accept: "application/json",
   },
-  timeout: 10000 // 10 seconds timeout
+  // timeout: 10000 // 10 seconds timeout
 });
 
-// Add a request interceptor to add the auth token to every request
 api.interceptors.request.use(
   (config) => {
     try {

@@ -34,17 +34,17 @@ function App() {
           {/* Public Routes */}
           <Route
             path="/login"
-            element={!user ? <Login /> : <Navigate to="/" />}
+            element={!user ? <Login /> : <Navigate to="/login" />}
           />
           <Route
             path="/register"
-            element={!user ? <Register /> : <Navigate to="/" />}
+            element={!user ? <Register /> : <Navigate to="/register" />}
           />
 
           {/* Protected Routes */}
           <Route
             path="/"
-            element={user ? <Layout /> : <Navigate to="/" />}
+            element={user ? <Layout /> : <Navigate to="/login" />}
             login
           >
             <Route index element={<Dashboard />} />
@@ -52,7 +52,7 @@ function App() {
             <Route path="/budgets" element={<Budgets />} />
             <Route path="/reports" element={<Reports />} />
           </Route>
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
       <ToastContainer />
