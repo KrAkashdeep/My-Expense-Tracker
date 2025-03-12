@@ -6,12 +6,10 @@ const cors = require("cors");
 require("dotenv").config();
 require("./config/db.js");
 
-// Configure CORS - Allow all origins for mobile compatibility
 app.use(
   cors({
     origin: "https://expense-tracker-sigma-nine-80.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true,
   })
 );
