@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const API_URL = "https://expense-backend-vert.vercel.app";
-const API_URL = "http://localhost:3000";
+const API_URL = "https://expense-tracker-backend-steel.vercel.app";
 
 // Create an axios instance
 const api = axios.create({
